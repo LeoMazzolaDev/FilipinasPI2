@@ -10,10 +10,10 @@ const int VELOCIDADE_PERSONAGEM = 5;
 const float GRAVIDADE = 0.4;
 const float IMPULSO_PULO = -10.0;
 const float ALTURA_CHAO = 500;
-const float FPS = 30.0;
+const float FPS = 60.0;
 
 const int NUM_FRAMES_ANDAR = 2;
-const int NUM_FRAMES_PULO = 3;
+const int NUM_FRAMES_PULO = 1;
 
 // Coordenadas do botão de início
 const int BOTAO_INICIO_X1 = 520;
@@ -38,19 +38,12 @@ int main() {
     ALLEGRO_TIMER* timer = al_create_timer(1.0 / FPS);
     al_start_timer(timer);
 
-    // Carregar a tela inicial
-    ALLEGRO_BITMAP* tela_inicial = al_load_bitmap("src/Tela_Inicial.png.jpg");
-    if (!tela_inicial) {
-        fprintf(stderr, "Falha ao carregar a tela inicial.\n");
-        al_destroy_display(display);
-        return -1;
-    }
+    
 
     // Carregar o sprite do personagem
     ALLEGRO_BITMAP* sprite_personagem = al_load_bitmap("src/felipe-150-sprites.png");
     if (!sprite_personagem) {
         fprintf(stderr, "Falha ao carregar o sprite do personagem.\n");
-        al_destroy_bitmap(tela_inicial);
         al_destroy_display(display);
         return -1;
     }
@@ -61,12 +54,12 @@ int main() {
     ALLEGRO_BITMAP* fase3 = al_load_bitmap("src/bg3-open-door.png");
     if (!fase1 || !fase2 || !fase3) {
         fprintf(stderr, "Falha ao carregar uma ou mais imagens de fase.\n");
-        al_destroy_bitmap(sprite_personagem);
-        al_destroy_bitmap(tela_inicial);
+        al_destroy_bitmap(sprite_personagem);       
         al_destroy_display(display);
         return -1;
     }
 
+   
     // Carregar a tela de fim de jogo
     ALLEGRO_BITMAP* tela_fim = al_load_bitmap("src/bg-Fim.png");
     if (!tela_fim) {
@@ -75,8 +68,20 @@ int main() {
         al_destroy_bitmap(fase1);
         al_destroy_bitmap(fase2);
         al_destroy_bitmap(fase3);
-        al_destroy_bitmap(tela_inicial);
         al_destroy_display(display);
+        return -1;
+    }
+
+    // Carregar a tela inicial
+    ALLEGRO_BITMAP* tela_inicial = al_load_bitmap("src/Tela_Inicial.png.jpg");
+    if (!tela_inicial) {
+        fprintf(stderr, "Falha ao carregar a tela inicial.\n");
+        al_destroy_bitmap(sprite_personagem);
+        al_destroy_bitmap(fase1);
+        al_destroy_bitmap(fase2);
+        al_destroy_bitmap(fase3);
+        al_destroy_display(display);
+        al_destroy_bitmap(tela_fim);
         return -1;
     }
 
@@ -142,8 +147,8 @@ int main() {
     float velocidade_y = 0;
     bool no_ar = false;
     bool olhando_para_direita = true;
-    int frame_x = 0; // Controla o frame horizontal
-    int frame_y = 0; // Controla o frame vertical
+    int frame_x = 0;  
+    int frame_y = 0; 
     int contador_frames = 0;
     int tempo_entre_frames = 8;
 
@@ -206,7 +211,7 @@ int main() {
                     frame_x = (frame_x + 1) % NUM_FRAMES_ANDAR; 
                 }
                 else if (no_ar) {
-                    frame_x = (frame_x + 1) % NUM_FRAMES_PULO; 
+                    frame_x = (frame_x +1 ) % NUM_FRAMES_PULO;
                 }
                 contador_frames = 0;
             }
